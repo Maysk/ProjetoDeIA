@@ -272,7 +272,7 @@ class Desenho(QWidget):
         listaKeys = self.parseListaMovimentosParaKey(listaMov)
         for movimento in listaKeys:
             QApplication.processEvents()
-            time.sleep(0.1)
+            time.sleep(0.2)
             self.mover(movimento)
     
     def keyPressEvent(self, event):
