@@ -2,3 +2,7 @@
 *.pydevproject
 .project
 *.db
+
+#PyCharm Ignore
+/.idea
+*.pyc
