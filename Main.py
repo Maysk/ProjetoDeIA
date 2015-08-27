@@ -7,9 +7,9 @@ def main():
 	
     app = QApplication(sys.argv)
     
-    #listaNumeros = [1,0,2,8,3,5,4,7,6]
+    listaNumeros = [1,2,3,4,5,6,7,0,8]
     
-    a = Desenho()
+    a = Desenho(listaPecas=listaNumeros)
     
     a.show()
         
@@ -20,4 +20,4 @@ def main():
 	
 if __name__ == "__main__":
 	main()
-
+	

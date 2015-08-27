@@ -6,7 +6,7 @@ import random
 import time
         
 class Desenho(QWidget):
-    def __init__(self, tamanho = 600, borda = 10,  bordaMenu = 20, listaPecas = [], redErrado=0,greenErrado=102,blueErrado=200, redCerto=74,greenCerto=178,blueCerto=79,parent=None):
+    def __init__(self, tamanho = 600, borda = 10,  bordaMenu = 20, listaPecas = [], tema = None, redErrado=0,greenErrado=102,blueErrado=200, redCerto=74,greenCerto=178,blueCerto=79,parent=None):
         QWidget.__init__(self, parent)
         
         #Configuracoes Gerais:
@@ -58,6 +58,9 @@ class Desenho(QWidget):
             [self.listaPecas,self.espacoVazio] = self.gerarPecasAleatoriamente()
         else:
             [self.listaPecas,self.espacoVazio] = self.gerarPecasDeLista(listaPecas)
+            
+        if tema is not None:
+            self.setImagemDasPecas(DialogoTema.dividirTema(tema, self.tamanho))
     
     #EVENTO PRINCIPAL DE PINTURA
     def paintEvent(self, event):
@@ -73,7 +76,7 @@ class Desenho(QWidget):
         #Desenhar Tabuleiro        
         self.tab.drawTabuleiro(paint)
         
-        #Desenhar pecas:        
+        #Desenhar pecas:
         paint.setPen(QColor(Qt.white))
         for peca in self.listaPecas:
             peca.drawPeca(paint)
@@ -84,6 +87,7 @@ class Desenho(QWidget):
     def acaoTemaEvent(self):
         selecionado = DialogoTema.getTemaSelecionado()
         print 'Tema selecionado:',selecionado 
+        self.setImagemDasPecas(DialogoTema.dividirTema(selecionado, self.tamanho))
                 
     def acaoNovoJogo(self):
         self.tab.qtdMovimentos = 0
@@ -94,6 +98,10 @@ class Desenho(QWidget):
     def acaoSolucionar(self):
         QMessageBox.about(self, 'Lamento :(', 'Esta funcionalidade nao esta implementada\n\n Ainda :D')
         
+    def setImagemDasPecas(self, listaImagens):       
+        for peca in self.listaPecas:
+            peca.imagem = listaImagens[peca.getNumero().toInt()[0]-1]
+                    
     def gerarPecasAleatoriamente(self):
         listaPecas = []
         listaNumerosAleatorios = range(0,9)
@@ -138,7 +146,7 @@ class Desenho(QWidget):
             pecaMovel = self.espacoVazio + 3            
             if(pecaMovel<=8): #movimento valido
                 print 'Mover para cima' 
-                movimentoValido = True  
+                movimentoValido = True
                 posicaoFinal = pecaMovel-3                 
                 self.buscarPecaMovel(pecaMovel)                
                         
@@ -232,22 +240,23 @@ class Desenho(QWidget):
                     QApplication.processEvents()
                     time.sleep(delayMovimento)
                     self.update()
-                if((posicaoInicial+1) != peca.getNumero().toInt()[0] and (posicaoFinal+1) == peca.getNumero().toInt()[0]): #se estava errado e foi pra certo
-                    cor1 = self.corErrado
-                    cor2 = self.corCerto
-                elif((posicaoInicial+1) == peca.getNumero().toInt()[0] and (posicaoFinal+1) != peca.getNumero().toInt()[0]): # se estava certo e foi pra errado
-                    cor1 = self.corCerto
-                    cor2 = self.corErrado
-                else:
-                    cor1 = None
-                    cor2 = None
-                    pass
-                listaCores = self.interpolacaoCor(cor1, cor2)
-                for cor in listaCores:
-                    peca.cor = QColor(int(cor[0]),int(cor[1]),int(cor[2]))
-                    QApplication.processEvents()
-                    time.sleep(delayCor)
-                    self.update()
+                if(peca.imagem is None):
+                    if((posicaoInicial+1) != peca.getNumero().toInt()[0] and (posicaoFinal+1) == peca.getNumero().toInt()[0]): #se estava errado e foi pra certo
+                        cor1 = self.corErrado
+                        cor2 = self.corCerto
+                    elif((posicaoInicial+1) == peca.getNumero().toInt()[0] and (posicaoFinal+1) != peca.getNumero().toInt()[0]): # se estava certo e foi pra errado
+                        cor1 = self.corCerto
+                        cor2 = self.corErrado
+                    else:
+                        cor1 = None
+                        cor2 = None
+                        pass
+                    listaCores = self.interpolacaoCor(cor1, cor2)
+                    for cor in listaCores:
+                        peca.cor = QColor(int(cor[0]),int(cor[1]),int(cor[2]))
+                        QApplication.processEvents()
+                        time.sleep(delayCor)
+                        self.update()
             
             
         
@@ -326,8 +335,8 @@ class Peca(object):
         self.posicao = posicao
         self.tamanhoTabuleiro = tamanhoTabuleiro
         self.bordaTabuleiro = bordaTabuleiro
-        self.bordaMenu = bordaMenu
-        
+        self.bordaMenu = bordaMenu        
+        self.imagem = None        
         self.largura = self.tamanhoTabuleiro/3
         self.altura = self.tamanhoTabuleiro/3        
         if(self.posicao / 3 == 0):
@@ -363,8 +372,13 @@ class Peca(object):
     def drawPeca(self,painter):
         pass
         #Desenho da peca:
-        painter.setBrush(self.cor)            
-        painter.drawRect(self.xOrigem,self.yOrigem+self.bordaMenu,self.largura,self.altura)
-        painter.setFont(QFont("Arial",self.tamanhoTabuleiro/20))
-        painter.drawText(self.xOrigemTexto,self.yOrigemTexto+self.bordaMenu,self.numero)
+        if self.imagem is None:
+            painter.setBrush(self.cor)            
+            painter.drawRect(self.xOrigem,self.yOrigem+self.bordaMenu,self.largura,self.altura)
+            painter.setFont(QFont("Arial",self.tamanhoTabuleiro/20))
+            painter.drawText(self.xOrigemTexto,self.yOrigemTexto+self.bordaMenu,self.numero)
+        else:
+            painter.setPen(Qt.white)
+            painter.drawPixmap(self.xOrigem,self.yOrigem+self.bordaMenu,self.imagem)
+            painter.drawPolyline(QPoint(self.xOrigem,self.yOrigem+self.bordaMenu),QPoint(self.xOrigem + self.tamanhoTabuleiro/3,self.yOrigem+self.bordaMenu),QPoint(self.xOrigem + self.tamanhoTabuleiro/3,self.yOrigem + self.tamanhoTabuleiro/3 + self.bordaMenu),QPoint(self.xOrigem,self.yOrigem + self.tamanhoTabuleiro/3 + self.bordaMenu),)
 
