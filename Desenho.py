@@ -1,5 +1,7 @@
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+from Tema import *
+import os
 import random
 import time
         
@@ -10,7 +12,10 @@ class Desenho(QWidget):
         #Configuracoes Gerais:
         self.tamanho = tamanho
         self.borda = borda
-        self.bordaMenu = bordaMenu
+        if(os.name == 'nt'): #se for Windows
+            self.bordaMenu = bordaMenu
+        else: #se for Linux ou outro
+            self.bordaMenu = 0
         self.bordaRodape = (self.tamanho/40) + 10
         self.corErrado = QColor(redErrado,greenErrado,blueErrado)
         self.corCerto = QColor(redCerto,greenCerto,blueCerto)
@@ -28,6 +33,12 @@ class Desenho(QWidget):
         acaoNovo.triggered.connect(self.acaoNovoJogo)         
         menuOpcoes.addAction(acaoNovo)
         
+        #Menu selecionar tema(imagem):
+        acaoTema = QAction('&Inserir Tema',self)
+        acaoTema.setShortcut('Insert')
+        acaoTema.triggered.connect(self.acaoTemaEvent)
+        menuOpcoes.addAction(acaoTema)
+
         #Menu solucionar com magia negra:
         acaoSoluc = QAction('&Solucionar',self)
         acaoSoluc.setShortcut('End')
@@ -39,7 +50,7 @@ class Desenho(QWidget):
         acaoSair.setShortcut('Esc')
         acaoSair.triggered.connect(qApp.quit)
         menuOpcoes.addAction(acaoSair)
-        
+
         #criacao dos objetos do desenho:
         self.tab = Tabuleiro(self.tamanho, self.borda, self.bordaMenu, self.bordaRodape)        
         self.listaPecas = listaPecas
@@ -69,7 +80,11 @@ class Desenho(QWidget):
         
         #Fechar pintor
         paint.end()
-        
+	
+    def acaoTemaEvent(self):
+        selecionado = DialogoTema.getTemaSelecionado()
+        print 'Tema selecionado:',selecionado 
+                
     def acaoNovoJogo(self):
         self.tab.qtdMovimentos = 0
         [self.listaPecas,self.espacoVazio] = self.gerarPecasAleatoriamente()
@@ -202,7 +217,7 @@ class Desenho(QWidget):
         
         return listaCoordenadas    
         
-    def moverInterface(self, posicaoInicial, posicaoFinal,delayMovimento = 0.001, delayCor = 0.0015):
+    def moverInterface(self, posicaoInicial, posicaoFinal,delayMovimento = 0.001, delayCor = 0.001):
         
         for peca in self.listaPecas:
             if(peca.getPosicao() == posicaoFinal):
