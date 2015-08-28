@@ -9,13 +9,17 @@ class Desenho(QWidget):
     def __init__(self, tamanho = 600, borda = 10,  bordaMenu = 20, listaPecas = [], tema = None, redErrado=0,greenErrado=102,blueErrado=200, redCerto=74,greenCerto=178,blueCerto=79,parent=None):
         QWidget.__init__(self, parent)
         
-        #Configuracoes Gerais:
-        self.tamanho = tamanho
-        self.borda = borda
         if(os.name == 'nt'): #se for Windows
             self.bordaMenu = bordaMenu
         else: #se for Linux ou outro
             self.bordaMenu = 0
+
+        #Configuracoes Gerais:
+        self.tamanho = tamanho
+
+        self.borda = borda
+
+
         self.bordaRodape = (self.tamanho/40) + 10
         self.corErrado = QColor(redErrado,greenErrado,blueErrado)
         self.corCerto = QColor(redCerto,greenCerto,blueCerto)
@@ -189,7 +193,7 @@ class Desenho(QWidget):
         listaCores = []
         if (cor1==None or cor2==None):
             return listaCores
-        
+
         passoR = (cor2.red() - cor1.red())/float(frames)
         passoG = (cor2.green() - cor1.green())/float(frames)
         passoB = (cor2.blue() - cor1.blue())/float(frames)
@@ -202,7 +206,9 @@ class Desenho(QWidget):
         
     def interpolacaoTranslacao(self, posicaoInicial, posicaoFinal, frames = 12):
         listaCoordenadas = []
-        
+
+
+
         if(posicaoInicial / 3 == 0):
             x1 = self.borda + (posicaoInicial * self.tamanho/3)
             y1 = self.borda            

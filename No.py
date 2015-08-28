@@ -5,5 +5,10 @@ class No:
         self.noPai = noPai
         self.movimentoGerador = movimentoGerador
         self.estadoTabuleiro = estadoTabuleiro
+        self.nosDescendentes = None
+
+
+
+
 
 
