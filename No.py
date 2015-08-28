@@ -5,10 +5,9 @@ class No:
         self.noPai = noPai
         self.movimentoGerador = movimentoGerador
         self.estadoTabuleiro = estadoTabuleiro
-        self.nosDescendentes = None
+        self.nosDescendentes = []
 
 
-
-
-
+    def adicionarDescendente(self, noDescendente):
+        self.nosDescendentes.append(noDescendente)
 
