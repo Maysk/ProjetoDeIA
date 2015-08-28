@@ -19,6 +19,7 @@ class Desenho(QWidget):
         self.bordaRodape = (self.tamanho/40) + 10
         self.corErrado = QColor(redErrado,greenErrado,blueErrado)
         self.corCerto = QColor(redCerto,greenCerto,blueCerto)
+        self.tema = tema
         # setGeometry(x_pos, y_pos, width, height)    
         self.setGeometry(100, 100, self.tamanho+(2*self.borda), self.tamanho+(2*self.borda)+self.bordaMenu+self.bordaRodape)
         self.setWindowTitle('Joguinho Weeeeeeeeee')
@@ -59,8 +60,8 @@ class Desenho(QWidget):
         else:
             [self.listaPecas,self.espacoVazio] = self.gerarPecasDeLista(listaPecas)
             
-        if tema is not None:
-            self.setImagemDasPecas(DialogoTema.dividirTema(tema, self.tamanho))
+        if self.tema is not None:
+            self.setImagemDasPecas(DialogoTema.dividirTema(self.tema, self.tamanho))
     
     #EVENTO PRINCIPAL DE PINTURA
     def paintEvent(self, event):
@@ -86,12 +87,16 @@ class Desenho(QWidget):
 	
     def acaoTemaEvent(self):
         selecionado = DialogoTema.getTemaSelecionado()
-        print 'Tema selecionado:',selecionado 
-        self.setImagemDasPecas(DialogoTema.dividirTema(selecionado, self.tamanho))
+        if(os.path.isfile(selecionado)):
+            print 'Tema selecionado:',selecionado 
+            self.setImagemDasPecas(DialogoTema.dividirTema(selecionado, self.tamanho))
+            self.tema = selecionado
                 
     def acaoNovoJogo(self):
         self.tab.qtdMovimentos = 0
         [self.listaPecas,self.espacoVazio] = self.gerarPecasAleatoriamente()
+        if self.tema is not None:
+            self.setImagemDasPecas(DialogoTema.dividirTema(self.tema,self.tamanho))
         QApplication.processEvents()        
         self.update()
         
