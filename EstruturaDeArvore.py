@@ -9,3 +9,8 @@ class EstruturaDeArvore:
         self.listaDeVerticesNaFronteira.append(self.raiz)
 
 
+    def retirarNoDaFronteira(self):
+        return None
+
+    def adicionarNoNaFronteira(self):
+        return None

@@ -15,7 +15,5 @@ class EstadoTabuleiro:
         return pecasNasPosicoesCorretas
 
 
-
-
     def gerarListaDePossibilidades(self, movimentoAnterior): #considerar as movimentacoes posiveis.
         return None
