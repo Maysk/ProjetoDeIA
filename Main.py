@@ -6,15 +6,12 @@ from Desenho import *
 import sys
 
 
-def main():
-	
+def main():	
     #app = QApplication(sys.argv)
     
     listaNumeros = [1,2,3,4,5,6,7,0,8]
 
     s = Solucionador(listaNumeros)
-
-
 
 
     #a = Desenho(listaPecas=listaNumeros)
@@ -24,8 +21,7 @@ def main():
     #listaMovimentos = ['w','w','a','a','a','d','s']
     #a.getListaMovimentos(listaMovimentos)
     
+    #return app.exec_()
 
-	
 if __name__ == "__main__":
-	main()
-	
+    main()
