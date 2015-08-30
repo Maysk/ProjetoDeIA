@@ -1,3 +1,4 @@
+#from __builtin__ import None
 __author__ = 'Matheus'
 
 
@@ -8,7 +9,7 @@ class EstadoTabuleiro:
     def isPecasNasPosicoesCorretas(self):
         pecasNasPosicoesCorretas = True
 
-        for i in range(1,8,None):
+        for i in range(1,8):
             if(self.lisRepresentandoTabuleiro[i] == i):
                 pecasNasPosicoesCorretas = False
 
@@ -16,4 +17,62 @@ class EstadoTabuleiro:
 
 
     def gerarListaDePossibilidades(self, movimentoAnterior): #considerar as movimentacoes posiveis.
-        return None
+        '''retorno: lista de tuplas no formato (movimentoGerador, estadoGerado)'''
+        retorno = []
+        listaMovimentos = ['u','d','r','l']
+        if movimentoAnterior == 'u':
+            listaMovimentos.remove('d')
+        elif movimentoAnterior == 'd':
+            listaMovimentos.remove('u')
+        elif movimentoAnterior == 'r':
+            listaMovimentos.remove('l')
+        elif movimentoAnterior == 'l':
+            listaMovimentos.remove('r')
+            
+        for movimento in listaMovimentos:
+            tabMovimentado = self.executarMovimento(movimento)
+            if tabMovimentado is not None:
+                retorno.append([movimento,EstadoTabuleiro(tabMovimentado)])
+                
+        return retorno
+                                   
+    def executarMovimento(self, movimento):    
+        indiceEspacoVazio = self.lisRepresentandoTabuleiro.index(0)
+        
+        if movimento == 'u':
+            indicePecaMovel = indiceEspacoVazio+3
+            if indicePecaMovel>8: #movimento invalido
+                return None
+        elif movimento == 'd':
+            indicePecaMovel = indiceEspacoVazio-3
+            if indicePecaMovel<0:
+                return None
+        elif movimento == 'l':
+            indicePecaMovel = indiceEspacoVazio+1
+            if indicePecaMovel%3==0:
+                return None
+        elif movimento == 'r':
+            indicePecaMovel = indiceEspacoVazio-1
+            if indicePecaMovel%3==2:
+                return None
+        
+        return self.trocarPecas(indicePecaMovel,indiceEspacoVazio)    
+        
+    def trocarPecas(self,indicePeca1,indicePeca2):
+        '''a entrada sao os indices, nao os numeros das pecas'''
+        tabuleiro = self.lisRepresentandoTabuleiro[:]
+                
+        auxTroca = tabuleiro[indicePeca1]
+        tabuleiro[indicePeca1] = tabuleiro[indicePeca2]
+        tabuleiro[indicePeca2] = auxTroca
+        
+        return tabuleiro
+    
+    def mostrarEstadoTabuleiro(self):
+        for i in range(0,len(self.lisRepresentandoTabuleiro)):
+            if i%3==2:
+                print self.lisRepresentandoTabuleiro[i]
+            else:
+                print self.lisRepresentandoTabuleiro[i],        
+            
+        
