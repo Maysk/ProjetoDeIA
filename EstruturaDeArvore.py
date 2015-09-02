@@ -5,12 +5,16 @@ from No import *
 class EstruturaDeArvore:
     def __init__(self, estadoInicialDoTabuleiro):
         self.raiz = No(None,None,estadoInicialDoTabuleiro)
-        self.listaDeVerticesNaFronteira = []
-        self.listaDeVerticesNaFronteira.append(self.raiz)
+        self.listaDeNosQueJaPassaramPelaFronteira = []
+        self.listaDeNosNaFronteira = []
+        self.listaDeNosNaFronteira.append(self.raiz)
 
 
     def retirarNoDaFronteira(self):
-        return None
+        return self.listaDeNosNaFronteira.pop()
 
-    def adicionarNoNaFronteira(self):
-        return None
+    def adicionarNoNaFronteira(self, no):
+        return self.listaDeNosNaFronteira.append(no)
+
+    #def noJaPassouPelaFronteira(self, no)
+

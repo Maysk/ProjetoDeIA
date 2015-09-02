@@ -4,13 +4,15 @@ __author__ = 'Matheus'
 
 class EstadoTabuleiro:
     def __init__(self, listaRepresentandoTabuleiro):
-        self.lisRepresentandoTabuleiro = listaRepresentandoTabuleiro
+        self.listaRepresentandoTabuleiro = listaRepresentandoTabuleiro
+        self.totalDeMovimentosLivresNecessarios = self.funcaoHeuristica()
+
 
     def isPecasNasPosicoesCorretas(self):
         pecasNasPosicoesCorretas = True
 
         for i in range(1,8):
-            if(self.lisRepresentandoTabuleiro[i] == i):
+            if(self.listaRepresentandoTabuleiro[i] == i):
                 pecasNasPosicoesCorretas = False
 
         return pecasNasPosicoesCorretas
@@ -37,7 +39,7 @@ class EstadoTabuleiro:
         return retorno
                                    
     def executarMovimento(self, movimento):    
-        indiceEspacoVazio = self.lisRepresentandoTabuleiro.index(0)
+        indiceEspacoVazio = self.listaRepresentandoTabuleiro.index(0)
         
         if movimento == 'u':
             indicePecaMovel = indiceEspacoVazio+3
@@ -60,7 +62,7 @@ class EstadoTabuleiro:
         
     def trocarPecas(self,indicePeca1,indicePeca2):
         '''a entrada sao os indices, nao os numeros das pecas'''
-        tabuleiro = self.lisRepresentandoTabuleiro[:]
+        tabuleiro = self.listaRepresentandoTabuleiro[:]
                 
         auxTroca = tabuleiro[indicePeca1]
         tabuleiro[indicePeca1] = tabuleiro[indicePeca2]
@@ -69,10 +71,21 @@ class EstadoTabuleiro:
         return tabuleiro
     
     def mostrarEstadoTabuleiro(self):
-        for i in range(0,len(self.lisRepresentandoTabuleiro)):
+        for i in range(0,len(self.listaRepresentandoTabuleiro)):
             if i%3==2:
-                print self.lisRepresentandoTabuleiro[i]
+                print self.listaRepresentandoTabuleiro[i]
             else:
-                print self.lisRepresentandoTabuleiro[i],        
+                print self.listaRepresentandoTabuleiro[i],
             
-        
+
+    def funcaoHeuristica(self):
+        totalDeMovimentosLivresNecessarios = 0
+        for i in range(len(self.listaRepresentandoTabuleiro)):
+            if(self.listaRepresentandoTabuleiro[i] != 0 ):
+                linhaAtual = i%3
+                colunaAtual = i/3
+                linhaCorreta = (self.listaRepresentandoTabuleiro[i]-1)%3
+                colunaCorreta = (self.listaRepresentandoTabuleiro[i]-1)/3
+                totalDeMovimentosLivresNecessarios += abs(linhaAtual - linhaCorreta) + abs(colunaAtual - colunaCorreta)
+
+        return totalDeMovimentosLivresNecessarios

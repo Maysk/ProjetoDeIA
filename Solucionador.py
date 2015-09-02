@@ -12,7 +12,7 @@ class Solucionador:
     def solucionar(self):
         no = self.arvore.retirarNoDaFronteira()
 
-        while(not no.estadoTabuleiro.isPecasNasPosicoesCorretas()):
+        while(not no.estadoTabuleiro.isPecasNasPosicoesCorretas() or self.arvore.listaDeNosNaFronteira == []):
             self.gerarDescendentesParaNo(no)
 
             for i in no.nosDescendentes:
@@ -21,12 +21,10 @@ class Solucionador:
             no = self.arvore.retirarNoDaFronteira()
 
 
-
     def gerarDescendentesParaNo(self, no):
         listaDeTuplas = no.estadoTabuleiro.gerarListaDePossibilidades(movimentoAnterior = no.movimentoGerador) #Recebe uma lista de tuplas com o formato (movimento, estadoGerado)
 
         for (movimentoGerador, estadoGerado) in listaDeTuplas:
             novoNo = No(no, movimentoGerador, estadoGerado)
+            #if(not self.arvore.noJaPassouPelaFronteira(novoNo)):
             no.adicionarDescendente(novoNo)
-
-

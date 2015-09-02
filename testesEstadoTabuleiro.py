@@ -47,5 +47,6 @@ for tupla in lista4:
     print 'Tabuleiro Inicial: '
     tab4.mostrarEstadoTabuleiro()
     print 'Movimento: ', tupla[0]
+    print 'Heuristica: ', tupla[1].totalDeMovimentosLivresNecessarios
     tupla[1].mostrarEstadoTabuleiro()
     pass
