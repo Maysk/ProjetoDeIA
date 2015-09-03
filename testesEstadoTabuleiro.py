@@ -17,7 +17,7 @@ lista1 = tab1.gerarListaDePossibilidades(None)
 lista2 = tab2.gerarListaDePossibilidades(None)
 lista3 = tab3.gerarListaDePossibilidades('l')
 lista4 = tab4.gerarListaDePossibilidades(None)
-
+'''
 for tupla in lista1:
     print 'Tabuleiro Inicial: '
     tab1.mostrarEstadoTabuleiro()
@@ -50,3 +50,9 @@ for tupla in lista4:
     print 'Heuristica: ', tupla[1].totalDeMovimentosLivresNecessarios
     tupla[1].mostrarEstadoTabuleiro()
     pass
+'''
+
+lista1 = [1,8,2,0,4,3,7,6,5]
+lista2 = [8,1,2,0,4,3,7,6,5]
+EstadoTabuleiro.isSolucionavel(lista1)
+EstadoTabuleiro.isSolucionavel(lista2)

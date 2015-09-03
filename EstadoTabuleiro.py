@@ -89,3 +89,18 @@ class EstadoTabuleiro:
                 totalDeMovimentosLivresNecessarios += abs(linhaAtual - linhaCorreta) + abs(colunaAtual - colunaCorreta)
 
         return totalDeMovimentosLivresNecessarios
+    
+    @staticmethod
+    def isSolucionavel(lista, mostrarNumInversoes = False):
+        numInversoes = 0
+        for i in range(0,len(lista)-1):
+            for j in range(i,len(lista)):
+                if((lista[i] != 0) and (lista[j] != 0) and lista[i]>lista[j]):
+                    numInversoes = numInversoes + 1 
+        if mostrarNumInversoes:
+            print 'Numero de Inversoes: ',numInversoes
+        #checa se e par
+        if numInversoes%2 == 0:
+            return True
+        else:
+            return False

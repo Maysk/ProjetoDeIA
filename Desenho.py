@@ -1,6 +1,7 @@
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from Tema import *
+from EstadoTabuleiro import *
 import os
 import random
 import time
@@ -112,12 +113,20 @@ class Desenho(QWidget):
             peca.imagem = listaImagens[peca.getNumero().toInt()[0]-1]
                     
     def gerarPecasAleatoriamente(self):
-        listaPecas = []
-        listaNumerosAleatorios = range(0,9)
-        random.shuffle(listaNumerosAleatorios)
+        solucionavel = False
+        while(not solucionavel):
+            listaPecas = []
+            listaNumerosAleatorios = range(0,9)
+            random.shuffle(listaNumerosAleatorios)
+            listaTesteSolucionavel = range(0,9)
+            for i in range(0,8):
+                listaTesteSolucionavel[listaNumerosAleatorios[i]] = i+1
+            listaTesteSolucionavel[listaNumerosAleatorios[8]] = 0
+            solucionavel = EstadoTabuleiro.isSolucionavel(listaTesteSolucionavel)
+        
         for i in range(0,8):
             listaPecas.append(Peca(i+1, listaNumerosAleatorios[i], self.tamanho, self.borda,self.bordaMenu,self.corErrado,self.corCerto))
-        espacoVazio = listaNumerosAleatorios[8]
+        espacoVazio = listaNumerosAleatorios[8]                                    
         return [listaPecas,espacoVazio]
     
     def gerarPecasDeLista(self,listaNumeros):
@@ -145,8 +154,12 @@ class Desenho(QWidget):
         for peca in self.listaPecas:
                 if(peca.getPosicao() == pecaMovel):
                     self.trocarPecaPorEspacoVazio(peca)                    
-        self.tab.incrementarQtdMovimentos()        
+        self.tab.incrementarQtdMovimentos()     
         
+        listaTesteInv = range(0,9)
+        listaTesteInv[self.espacoVazio] = 0
+        for peca in self.listaPecas:
+            listaTesteInv[peca.getPosicao()] = peca.getNumero().toInt()[0]
     
     def moverLogica(self,botao):
         movimentoValido = False
@@ -207,8 +220,6 @@ class Desenho(QWidget):
     def interpolacaoTranslacao(self, posicaoInicial, posicaoFinal, frames = 12):
         listaCoordenadas = []
 
-
-
         if(posicaoInicial / 3 == 0):
             x1 = self.borda + (posicaoInicial * self.tamanho/3)
             y1 = self.borda            
@@ -236,7 +247,7 @@ class Desenho(QWidget):
         
         return listaCoordenadas    
         
-    def moverInterface(self, posicaoInicial, posicaoFinal,delayMovimento = 0.001, delayCor = 0.001):
+    def moverInterface(self, posicaoInicial, posicaoFinal,delayMovimento = 0.008, delayCor = 0.0007):
         
         for peca in self.listaPecas:
             if(peca.getPosicao() == posicaoFinal):
@@ -280,7 +291,7 @@ class Desenho(QWidget):
             self.moverInterface(posicaoInicial,posicaoFinal)        
             self.setDisabled(False)
             self.checarFimDoJogo()
-            
+                    
     def checarFimDoJogo(self):
         posicaoErrada = False
         for peca in self.listaPecas:

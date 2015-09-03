@@ -7,14 +7,13 @@ import sys
 
 
 def main():	
-    #app = QApplication(sys.argv)
+    app = QApplication(sys.argv)
     
     listaNumeros = [1,2,3,4,5,6,7,0,8]
-
+    
     s = Solucionador(listaNumeros)
 
-
-    #a = Desenho(listaPecas=listaNumeros)
+    #a = Desenho()
     
     #a.show()
         
