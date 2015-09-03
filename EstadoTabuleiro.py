@@ -82,10 +82,10 @@ class EstadoTabuleiro:
         totalDeMovimentosLivresNecessarios = 0
         for i in range(len(self.listaRepresentandoTabuleiro)):
             if(self.listaRepresentandoTabuleiro[i] != 0 ):
-                linhaAtual = i%3
-                colunaAtual = i/3
-                linhaCorreta = (self.listaRepresentandoTabuleiro[i]-1)%3
-                colunaCorreta = (self.listaRepresentandoTabuleiro[i]-1)/3
+                linhaAtual = i/3
+                colunaAtual = i%3
+                linhaCorreta = (self.listaRepresentandoTabuleiro[i]-1)/3
+                colunaCorreta = (self.listaRepresentandoTabuleiro[i]-1)%3
                 totalDeMovimentosLivresNecessarios += abs(linhaAtual - linhaCorreta) + abs(colunaAtual - colunaCorreta)
 
         return totalDeMovimentosLivresNecessarios
