@@ -7,16 +7,20 @@ class EstadoTabuleiro:
         self.listaRepresentandoTabuleiro = listaRepresentandoTabuleiro
         self.totalDeMovimentosLivresNecessarios = self.funcaoHeuristica()
 
-
     def isPecasNasPosicoesCorretas(self):
         pecasNasPosicoesCorretas = True
 
-        for i in range(1,8):
-            if(self.listaRepresentandoTabuleiro[i] == i):
+        for i in range(len(self.listaRepresentandoTabuleiro)-1):
+            if(self.listaRepresentandoTabuleiro[i] != i+1):
                 pecasNasPosicoesCorretas = False
 
         return pecasNasPosicoesCorretas
 
+    def gerarIdentificador(self):
+        idResultante = ''
+        for i in self.listaRepresentandoTabuleiro:
+            idResultante += str(i)
+        return idResultante
 
     def gerarListaDePossibilidades(self, movimentoAnterior): #considerar as movimentacoes posiveis.
         '''retorno: lista de tuplas no formato (movimentoGerador, estadoGerado)'''

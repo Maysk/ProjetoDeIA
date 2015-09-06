@@ -1,5 +1,5 @@
 from EstadoTabuleiro import *
-
+from Solucionador import *
 
 estado1 = [1,0,2,3,4,5,6,7,8]
 estado2 = [1,2,3,0,4,5,6,7,8]
@@ -13,10 +13,15 @@ tab2 = EstadoTabuleiro(estado2)
 tab3 = EstadoTabuleiro(estado3)
 tab4 = EstadoTabuleiro(estado4)
 
+
+
 lista1 = tab1.gerarListaDePossibilidades(None)
 lista2 = tab2.gerarListaDePossibilidades(None)
 lista3 = tab3.gerarListaDePossibilidades('l')
 lista4 = tab4.gerarListaDePossibilidades(None)
+
+
+
 '''
 for tupla in lista1:
     print 'Tabuleiro Inicial: '
@@ -52,7 +57,14 @@ for tupla in lista4:
     pass
 '''
 
+lista0 = [1,2,3,4,5,6,7,0,8]
 lista1 = [1,8,2,0,4,3,7,6,5]
 lista2 = [8,1,2,0,4,3,7,6,5]
-EstadoTabuleiro.isSolucionavel(lista1)
+
+estado_teste = EstadoTabuleiro(lista0)
+solucionadorTeste = Solucionador(estado_teste)
+print solucionadorTeste.solucionar()
+
+
 EstadoTabuleiro.isSolucionavel(lista2)
+
