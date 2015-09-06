@@ -61,8 +61,9 @@ lista0 = [1,2,3,4,5,6,7,0,8]
 lista1 = [1,8,2,0,4,3,7,6,5]
 lista2 = [8,1,2,0,4,3,7,6,5]
 
-estado_teste = EstadoTabuleiro(lista0)
-solucionadorTeste = Solucionador(estado_teste)
+
+
+solucionadorTeste = Solucionador(lista1)
 print solucionadorTeste.solucionar()
 
 

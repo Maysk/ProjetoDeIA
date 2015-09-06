@@ -6,26 +6,30 @@ from EstruturaDeArvore import *
 
 
 class Solucionador:
+    #Inicializador
+    #tabuleiroInicial: list
     def __init__(self, tabuleiroInicial):
         self.arvore = EstruturaDeArvore(tabuleiroInicial)
         self.estadosQueJaPassaramPelaFronteira = {}
 
-
+    #Soluciona e retorna uma lista de chars onde cada char representa um movimento
     def solucionar(self):
         no = None
         pecasNasPosicoesCorretas = False
         listaDeNosNaFronteiraVazia = False
 
-        while not (pecasNasPosicoesCorretas or listaDeNosNaFronteiraVazia):
-            self.arvore.ordenarListaDeNosNaFronteira()
+        while not (pecasNasPosicoesCorretas or self.arvore.listaDeNosNaFronteira == []):
             no = self.arvore.retirarNoDaFronteira()
-            self.gerarDescendentesParaNo(no)
 
+#            Talvez seja usado, talvez nao
+#            if (self.estadoJaPassouPelaFronteira(no.estadoTabuleiro)):
+#               pass
+
+            self.gerarDescendentesParaNo(no)
             for i in no.nosDescendentes:
                 self.arvore.adicionarNoNaFronteira(i)
 
             pecasNasPosicoesCorretas = no.estadoTabuleiro.isPecasNasPosicoesCorretas()
-            listaDeNosNaFronteiraVazia = self.arvore.listaDeNosNaFronteira == []
 
 
         if pecasNasPosicoesCorretas:
@@ -34,7 +38,7 @@ class Solucionador:
             raise ValueError("Deu Ruim!")
 
 
-
+    #Tipo de retorno: list
     def gerarListaSolucionadora(self,no):
         listaSolucionadora = []
         chegouNaRaiz = False
@@ -43,8 +47,6 @@ class Solucionador:
             listaSolucionadora.insert(0, noCorrente.movimentoGerador)
             noCorrente = noCorrente.noPai
         return listaSolucionadora
-
-
 
 
     def adicionarAListaDeEstadosQueJaPassaramPelaFronteira(self,estado):

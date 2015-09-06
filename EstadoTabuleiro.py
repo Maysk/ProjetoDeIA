@@ -3,6 +3,8 @@ __author__ = 'Matheus'
 
 
 class EstadoTabuleiro:
+    #Inicializador
+    #listaRepresentandoTabuleiro: list
     def __init__(self, listaRepresentandoTabuleiro):
         self.listaRepresentandoTabuleiro = listaRepresentandoTabuleiro
         self.totalDeMovimentosLivresNecessarios = self.funcaoHeuristica()
@@ -38,10 +40,10 @@ class EstadoTabuleiro:
         for movimento in listaMovimentos:
             tabMovimentado = self.executarMovimento(movimento)
             if tabMovimentado is not None:
-                retorno.append([movimento,EstadoTabuleiro(tabMovimentado)])
+                retorno.append([movimento,tabMovimentado])
                 
         return retorno
-                                   
+
     def executarMovimento(self, movimento):    
         indiceEspacoVazio = self.listaRepresentandoTabuleiro.index(0)
         
