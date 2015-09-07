@@ -5,6 +5,7 @@ from EstadoTabuleiro import *
 import os
 import random
 import time
+from Solucionador import Solucionador
         
 class Desenho(QWidget):
     def __init__(self, tamanho = 600, borda = 10,  bordaMenu = 20, listaPecas = [], tema = None, redErrado=0,greenErrado=102,blueErrado=200, redCerto=74,greenCerto=178,blueCerto=79,parent=None):
@@ -17,10 +18,7 @@ class Desenho(QWidget):
 
         #Configuracoes Gerais:
         self.tamanho = tamanho
-
         self.borda = borda
-
-
         self.bordaRodape = (self.tamanho/40) + 10
         self.corErrado = QColor(redErrado,greenErrado,blueErrado)
         self.corCerto = QColor(redCerto,greenCerto,blueCerto)
@@ -106,7 +104,15 @@ class Desenho(QWidget):
         self.update()
         
     def acaoSolucionar(self):
-        QMessageBox.about(self, 'Lamento :(', 'Esta funcionalidade nao esta implementada\n\n Ainda :D')
+        s = Solucionador(self.getListaDePecas())
+        self.getListaMovimentos(s.solucionar())
+        
+    def getListaDePecas(self):
+        retorno = range(0,9)
+        for peca in self.listaPecas:
+            retorno[peca.getPosicao()] = peca.getNumero().toInt()[0]
+        retorno[self.espacoVazio] = 0
+        return retorno
         
     def setImagemDasPecas(self, listaImagens):       
         for peca in self.listaPecas:
@@ -304,13 +310,13 @@ class Desenho(QWidget):
     def parseListaMovimentosParaKey(self, lista):
         listaKeys = []
         for movimento in lista:
-            if(movimento == 'w'):
+            if(movimento == 'w' or movimento == 'u'):
                 listaKeys.append(Qt.Key_W)
-            elif(movimento == 's'):
+            elif(movimento == 's' or movimento == 'd'):
                 listaKeys.append(Qt.Key_S)
-            elif(movimento == 'a'):
+            elif(movimento == 'a' or movimento == 'l'):
                 listaKeys.append(Qt.Key_A)
-            elif(movimento == 'd'):
+            elif(movimento == 'd' or movimento == 'r'):
                 listaKeys.append(Qt.Key_D)
         return listaKeys
     

@@ -13,8 +13,10 @@ def main():
     lista1 = [1,8,2,0,4,3,7,6,5]
     
     s = Solucionador(lista1)
+    
 
     a = Desenho(listaPecas=lista1)
+    
     
     a.show()
         
