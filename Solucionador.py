@@ -22,8 +22,10 @@ class Solucionador:
             no = self.arvore.retirarNoDaFronteira()
 
 #            Talvez seja usado, talvez nao
-#            if (self.estadoJaPassouPelaFronteira(no.estadoTabuleiro)):
-#               pass
+            if (self.estadoJaPassouPelaFronteira(no.estadoTabuleiro)):
+               continue
+            else:
+                self.adicionarAListaDeEstadosQueJaPassaramPelaFronteira(no.estadoTabuleiro)
 
             self.gerarDescendentesParaNo(no)
             for i in no.nosDescendentes:
