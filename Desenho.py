@@ -87,14 +87,14 @@ class Desenho(QWidget):
         
         #Fechar pintor
         paint.end()
-	
+        
     def acaoTemaEvent(self):
-        selecionado = DialogoTema.getTemaSelecionado()
+        selecionado = DialogoTema.getTemaSelecionado(self)
         if(os.path.isfile(selecionado)):
             print 'Tema selecionado:',selecionado 
             self.setImagemDasPecas(DialogoTema.dividirTema(selecionado, self.tamanho))
             self.tema = selecionado
-                
+            
     def acaoNovoJogo(self):
         self.tab.qtdMovimentos = 0
         [self.listaPecas,self.espacoVazio] = self.gerarPecasAleatoriamente()
@@ -117,7 +117,10 @@ class Desenho(QWidget):
     def setImagemDasPecas(self, listaImagens):       
         for peca in self.listaPecas:
             peca.imagem = listaImagens[peca.getNumero().toInt()[0]-1]
-                    
+    def resetTema(self):
+        self.tema = None
+        for peca in self.listaPecas:
+            peca.resetTema()
     def gerarPecasAleatoriamente(self):
         solucionavel = False
         while(not solucionavel):
@@ -285,10 +288,11 @@ class Desenho(QWidget):
                         QApplication.processEvents()
                         time.sleep(delayCor)
                         self.update()
-            
-            
-        
-        pass
+                else:
+                    if(peca.numero.toInt()[0] == (peca.posicao+1)):
+                        peca.cor = peca.corCerto
+                    else:
+                        peca.cor = peca.corErrado   
     
     def mover(self, botao):
         [posicaoInicial,posicaoFinal] = self.moverLogica(botao)    
@@ -387,7 +391,8 @@ class Peca(object):
         else:
             self.cor = self.corCerto     
             
-
+    def resetTema(self):
+        self.imagem = None
     def getPosicao(self):
         return self.posicao
     def setPosicao(self,novaPosicao):
@@ -401,12 +406,12 @@ class Peca(object):
         pass
         #Desenho da peca:
         if self.imagem is None:
-            painter.setBrush(self.cor)            
+            painter.setBrush(self.cor)           
             painter.drawRect(self.xOrigem,self.yOrigem+self.bordaMenu,self.largura,self.altura)
             painter.setFont(QFont("Arial",self.tamanhoTabuleiro/20))
             painter.drawText(self.xOrigemTexto,self.yOrigemTexto+self.bordaMenu,self.numero)
         else:
             painter.setPen(Qt.white)
             painter.drawPixmap(self.xOrigem,self.yOrigem+self.bordaMenu,self.imagem)
-            painter.drawPolyline(QPoint(self.xOrigem,self.yOrigem+self.bordaMenu),QPoint(self.xOrigem + self.tamanhoTabuleiro/3,self.yOrigem+self.bordaMenu),QPoint(self.xOrigem + self.tamanhoTabuleiro/3,self.yOrigem + self.tamanhoTabuleiro/3 + self.bordaMenu),QPoint(self.xOrigem,self.yOrigem + self.tamanhoTabuleiro/3 + self.bordaMenu),)
+            painter.drawPolyline(QPoint(self.xOrigem,self.yOrigem+self.bordaMenu),QPoint(self.xOrigem + self.tamanhoTabuleiro/3,self.yOrigem+self.bordaMenu),QPoint(self.xOrigem + self.tamanhoTabuleiro/3,self.yOrigem + self.tamanhoTabuleiro/3 + self.bordaMenu),QPoint(self.xOrigem,self.yOrigem + self.tamanhoTabuleiro/3 + self.bordaMenu))
 

@@ -4,14 +4,16 @@ import os
 import time
 
 class DialogoTema(QDialog):
-    def __init__(self,parent):
+    def __init__(self,desenho,parent):
         super(QDialog,self).__init__(parent)
         self.setWindowTitle('Escolher Tema')
         self.imagemSelecionada = ''
         self.setLayout(QGridLayout(self))
+        self.desenho = desenho
         self.carregarImagens()
 
     def carregarImagens(self, diretorio = 'Temas/'):
+        
         self.listaImagens = []
         if not os.path.exists(diretorio):
             os.makedirs(diretorio)
@@ -33,21 +35,39 @@ class DialogoTema(QDialog):
             if coluna % imagensPorLinha == 0:
                 linha = linha + 1
                 coluna = 0
+                
 
-        botao = QPushButton('Pesquisar Tema')
-        botao.setFixedSize(larguraMaxima,larguraMaxima)
-        botao.clicked.connect(self.clicouBotao)
-        self.layout().addWidget(botao,linha,coluna)
-
-    def clicouBotao(self):
+        botaoPesquisarTema = QPushButton('Pesquisar Tema')
+        botaoPesquisarTema.setFixedSize(larguraMaxima,larguraMaxima/2)
+        botaoPesquisarTema.clicked.connect(self.clicouBotaoPesquisar)
+        #self.layout().addWidget(botaoPesquisarTema,linha,coluna)
+        botaoResetarTema = QPushButton("Remover Tema")
+        botaoResetarTema.setFixedSize(larguraMaxima,larguraMaxima/2)
+        botaoResetarTema.clicked.connect(self.clicouBotaoResetar)
+        
+        if(self.desenho.tema is None):
+            botaoResetarTema.setEnabled(False)
+        #self.layout().addWidget(botao2,linha,coluna)
+        botoes = QWidget()
+        botoes.setLayout(QGridLayout())   
+        botoes.layout().addWidget(botaoPesquisarTema)
+        botoes.layout().addWidget(botaoResetarTema)
+        self.layout().addWidget(botoes,linha,coluna)
+        
+    def clicouBotaoPesquisar(self):
 
         [self.imagemSelecionada,result] = DialogoArquivo.getArquivoSelecionado()
         if result != 0:
             self.close()
+    
+    def clicouBotaoResetar(self):
+        self.desenho.resetTema()
+        self.desenho.update()
+        self.close()
 
     @staticmethod    
-    def getTemaSelecionado(parent = None):
-        dialog = DialogoTema(parent)
+    def getTemaSelecionado(desenho,parent = None):
+        dialog = DialogoTema(desenho,parent)
         result = dialog.exec_()
         return dialog.imagemSelecionada
     
