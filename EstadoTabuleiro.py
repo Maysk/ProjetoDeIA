@@ -7,7 +7,9 @@ class EstadoTabuleiro:
     #listaRepresentandoTabuleiro: list
     def __init__(self, listaRepresentandoTabuleiro):
         self.listaRepresentandoTabuleiro = listaRepresentandoTabuleiro
-        self.totalDeMovimentosLivresNecessarios = self.funcaoHeuristica()
+
+        #TODO Arrumar um jeito de como passar qual metodo deve ser usado.
+        self.totalDeMovimentosLivresNecessarios = self.funcaoHeuristicaDistanciaAteObjetivo()
 
     def isPecasNasPosicoesCorretas(self):
         pecasNasPosicoesCorretas = True
@@ -84,7 +86,25 @@ class EstadoTabuleiro:
                 print self.listaRepresentandoTabuleiro[i],
             
 
-    def funcaoHeuristica(self):
+    def funcaoHeuristicaParaBuscaEmLargura(self):
+        return 0
+
+    def funcaoHeuristicaParaPecasForaDoLugar(self):
+        totalDePecasForaDoLugar = 0
+        for i in range(len(self.listaRepresentandoTabuleiro)):
+            if(self.listaRepresentandoTabuleiro[i] != 0 ):
+                linhaAtual = i/3
+                colunaAtual = i%3
+                linhaCorreta = (self.listaRepresentandoTabuleiro[i]-1)/3
+                colunaCorreta = (self.listaRepresentandoTabuleiro[i]-1)%3
+                if(linhaAtual != linhaCorreta or colunaAtual !=colunaCorreta):
+                    totalDePecasForaDoLugar = totalDePecasForaDoLugar + 1
+
+        return totalDePecasForaDoLugar
+
+
+    #Funcao Heuristica original
+    def funcaoHeuristicaDistanciaAteObjetivo(self):
         totalDeMovimentosLivresNecessarios = 0
         for i in range(len(self.listaRepresentandoTabuleiro)):
             if(self.listaRepresentandoTabuleiro[i] != 0 ):

@@ -17,7 +17,8 @@ class No:
         else:
             self.nivel = noPai.nivel + 1
 
-        self.numeroDeOrdem = self.estadoTabuleiro.funcaoHeuristica() + self.nivel
+        #TODO Arrumar um jeito de como passar qual metodo deve ser usado.
+        self.numeroDeOrdem = self.estadoTabuleiro.funcaoHeuristicaDistanciaAteObjetivo() + self.nivel
 
 
     #Adiciona noDescendentes a lista de descendentes
