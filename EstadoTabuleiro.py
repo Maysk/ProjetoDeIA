@@ -7,9 +7,7 @@ class EstadoTabuleiro:
     #listaRepresentandoTabuleiro: list
     def __init__(self, listaRepresentandoTabuleiro):
         self.listaRepresentandoTabuleiro = listaRepresentandoTabuleiro
-
-        #TODO Arrumar um jeito de como passar qual metodo deve ser usado.
-        self.totalDeMovimentosLivresNecessarios = self.funcaoHeuristicaDistanciaAteObjetivo()
+        self.valorHeuristico = self.funcaoHeuristicaDistanciaAteObjetivo()
 
     def isPecasNasPosicoesCorretas(self):
         pecasNasPosicoesCorretas = True

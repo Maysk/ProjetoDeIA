@@ -1,39 +1,40 @@
-import No
-
 __author__ = 'Matheus'
-from No import *
-from EstruturaDeArvore import *
 
+from No import *
+from GerenciadorDaFronteira import *
 
 class Solucionador:
     #Inicializador
     #tabuleiroInicial: list
     def __init__(self, tabuleiroInicial):
-        self.arvore = EstruturaDeArvore(tabuleiroInicial)
-        self.estadosQueJaPassaramPelaFronteira = {}
+        self.raiz = No(None, None, tabuleiroInicial)
+        self.fronteira = GerenciadorDaFronteira()
+        self.estadosJaAvaliados = {}
 
     #Soluciona e retorna uma lista de chars onde cada char representa um movimento
     def solucionar(self):
         no = None
+        self.fronteira.adicionarNoNaFronteira(self.raiz)
         pecasNasPosicoesCorretas = False
-        listaDeNosNaFronteiraVazia = False
 
-        while not (pecasNasPosicoesCorretas or self.arvore.listaDeNosNaFronteira == []):
-            no = self.arvore.retirarNoDaFronteira()
+        iteradorInutil = 0
+        while not (pecasNasPosicoesCorretas or self.fronteira.isVazia()):
+            iteradorInutil = iteradorInutil + 1
+            no = self.fronteira.retirarNoDaFronteira()
 
-#            Talvez seja usado, talvez nao
-            if (self.estadoJaPassouPelaFronteira(no.estadoTabuleiro)):
+            if (self.estadoJaFoiAvaliado(no.estadoTabuleiro)):
                continue
             else:
-                self.adicionarAListaDeEstadosQueJaPassaramPelaFronteira(no.estadoTabuleiro)
+                self.adicionarAoEstadosJaAvaliados(no.estadoTabuleiro)
 
             self.gerarDescendentesParaNo(no)
             for i in no.nosDescendentes:
-                self.arvore.adicionarNoNaFronteira(i)
+                self.fronteira.adicionarNoNaFronteira(i)
 
             pecasNasPosicoesCorretas = no.estadoTabuleiro.isPecasNasPosicoesCorretas()
 
 
+        print(iteradorInutil)
         if pecasNasPosicoesCorretas:
             return self.gerarListaSolucionadora(no)
         else:
@@ -51,13 +52,13 @@ class Solucionador:
         return listaSolucionadora
 
 
-    def adicionarAListaDeEstadosQueJaPassaramPelaFronteira(self,estado):
-        self.estadosQueJaPassaramPelaFronteira[estado.gerarIdentificador()] = True
+    def adicionarAoEstadosJaAvaliados(self,estado):
+        self.estadosJaAvaliados[estado.gerarIdentificador()] = True
 
 
-    def estadoJaPassouPelaFronteira(self, estado):
+    def estadoJaFoiAvaliado(self, estado):
         try:
-            return self.estadosQueJaPassaramPelaFronteira[estado.gerarIdentificador()]
+            return self.estadosJaAvaliados[estado.gerarIdentificador()]
         except KeyError:
             return False
 
