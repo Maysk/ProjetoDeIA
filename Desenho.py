@@ -10,7 +10,7 @@ from Solucionador import Solucionador
 class Desenho(QWidget):
     def __init__(self, tamanho = 600, borda = 10,  bordaMenu = 20, listaPecas = [], tema = None, redErrado=0,greenErrado=102,blueErrado=200, redCerto=74,greenCerto=178,blueCerto=79,parent=None):
         QWidget.__init__(self, parent)
-        
+                
         if(os.name == 'nt'): #se for Windows
             self.bordaMenu = bordaMenu
         else: #se for Linux ou outro
@@ -24,9 +24,12 @@ class Desenho(QWidget):
         self.corCerto = QColor(redCerto,greenCerto,blueCerto)
         self.tema = tema
         # setGeometry(x_pos, y_pos, width, height)    
-        self.setGeometry(100, 100, self.tamanho+(2*self.borda), self.tamanho+(2*self.borda)+self.bordaMenu+self.bordaRodape)
+        self.setGeometry(100, 100, self.tamanho+(2*self.borda)+240, self.tamanho+(2*self.borda)+self.bordaMenu+self.bordaRodape)
         self.setWindowTitle('Joguinho Weeeeeeeeee')
 
+        #Guardando tabuleiro inicial:
+        self.tabuleiroInicial = listaPecas
+        
         #Menus:
         self.myQMenuBar = QMenuBar(self)
         menuOpcoes = self.myQMenuBar.addMenu('Opcoes')
@@ -36,6 +39,12 @@ class Desenho(QWidget):
         acaoNovo.setShortcut('F2')
         acaoNovo.triggered.connect(self.acaoNovoJogo)         
         menuOpcoes.addAction(acaoNovo)
+        
+        #Menu resetar jogo:
+        acaoReset = QAction('&Resetar Jogo',self)
+        acaoReset.setShortcut('Backspace')
+        acaoReset.triggered.connect(self.acaoResetarJogo)
+        menuOpcoes.addAction(acaoReset)
         
         #Menu selecionar tema(imagem):
         acaoTema = QAction('&Inserir Tema',self)
@@ -66,6 +75,34 @@ class Desenho(QWidget):
         if self.tema is not None:
             self.setImagemDasPecas(DialogoTema.dividirTema(self.tema, self.tamanho))
     
+        #Botao de resetar
+        self.botaoReset = QPushButton('Resetar Jogo',self)
+        self.botaoReset.setFixedSize(140,25)
+        self.botaoReset.move(self.borda+self.tamanho-140,(2*borda)+tamanho+15)
+        self.botaoReset.clicked.connect(self.acaoResetarJogo)
+        self.botaoReset.setDefault(False)
+        self.botaoReset.setAutoDefault(False) 
+        
+        #Escolha do algoritmo para resolver
+        self.radioButtons = QButtonGroup()
+        aEstrelaDistancia = QRadioButton('A* para distancia\nate o objetivo',self)
+        aEstrelaPecasForaDoLugar = QRadioButton('A* para pecas\nfora do lugar',self)
+        buscaLargura = QRadioButton('Busca em Largura',self)
+        
+        aEstrelaDistancia.click() #set default
+        
+        self.radioButtons.addButton(aEstrelaDistancia)
+        self.radioButtons.addButton(aEstrelaPecasForaDoLugar)
+        self.radioButtons.addButton(buscaLargura)        
+                
+        self.xRadio = self.borda+self.tamanho+15 
+        passo = 35
+        self.yRadioInicial = 65
+        aEstrelaDistancia.move(self.xRadio,self.yRadioInicial)
+        aEstrelaPecasForaDoLugar.move(self.xRadio,self.yRadioInicial+passo)
+        buscaLargura.move(self.xRadio,self.yRadioInicial+(2*passo))
+        
+    
     #EVENTO PRINCIPAL DE PINTURA
     def paintEvent(self, event):
         
@@ -85,6 +122,10 @@ class Desenho(QWidget):
         for peca in self.listaPecas:
             peca.drawPeca(paint)
         
+        paint.setPen(QColor(Qt.black))
+        paint.setFont(QFont("Arial",14))        
+        paint.drawText(self.xRadio,5*self.borda,"Algoritmo de Resolucao:")
+        
         #Fechar pintor
         paint.end()
         
@@ -103,10 +144,15 @@ class Desenho(QWidget):
         QApplication.processEvents()        
         self.update()
         
+    def acaoResetarJogo(self):
+        [self.listaPecas,self.espacoVazio] = self.gerarPecasDeLista(self.tabuleiroInicial)
+        self.tab.qtdMovimentos = 0
+        self.update()
+        
+        pass
     def acaoSolucionar(self):
         s = Solucionador(self.getListaDePecas())
-        self.getListaMovimentos(s.solucionar())
-        
+        self.getListaMovimentos(s.solucionar())                
     def getListaDePecas(self):
         retorno = range(0,9)
         for peca in self.listaPecas:
@@ -117,10 +163,12 @@ class Desenho(QWidget):
     def setImagemDasPecas(self, listaImagens):       
         for peca in self.listaPecas:
             peca.imagem = listaImagens[peca.getNumero().toInt()[0]-1]
+    
     def resetTema(self):
         self.tema = None
         for peca in self.listaPecas:
             peca.resetTema()
+            
     def gerarPecasAleatoriamente(self):
         solucionavel = False
         while(not solucionavel):
@@ -135,7 +183,8 @@ class Desenho(QWidget):
         
         for i in range(0,8):
             listaPecas.append(Peca(i+1, listaNumerosAleatorios[i], self.tamanho, self.borda,self.bordaMenu,self.corErrado,self.corCerto))
-        espacoVazio = listaNumerosAleatorios[8]                                    
+        espacoVazio = listaNumerosAleatorios[8]
+        self.tabuleiroInicial = listaTesteSolucionavel                                   
         return [listaPecas,espacoVazio]
     
     def gerarPecasDeLista(self,listaNumeros):
