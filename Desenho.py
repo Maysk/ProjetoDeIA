@@ -176,6 +176,8 @@ class Desenho(QMainWindow):
     def acaoResetarJogo(self):
         [self.listaPecas,self.espacoVazio] = self.gerarPecasDeLista(self.tabuleiroInicial)
         self.tab.qtdMovimentos = 0
+        if self.tema is not None:
+            self.setImagemDasPecas(DialogoTema.dividirTema(self.tema,self.tamanho))
         self.update()
         
         pass
