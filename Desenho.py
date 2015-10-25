@@ -7,10 +7,11 @@ import random
 import time
 from Solucionador import Solucionador
         
-class Desenho(QWidget):
+class Desenho(QMainWindow):
     def __init__(self, tamanho = 600, borda = 10,  bordaMenu = 20, listaPecas = [], tema = None, redErrado=0,greenErrado=102,blueErrado=200, redCerto=74,greenCerto=178,blueCerto=79,parent=None):
-        QWidget.__init__(self, parent)
-                
+        #QWidget.__init__(self, parent)
+        super(Desenho, self).__init__()
+
         if(os.name == 'nt'): #se for Windows
             self.bordaMenu = bordaMenu
         else: #se for Linux ou outro
@@ -31,9 +32,9 @@ class Desenho(QWidget):
         self.tabuleiroInicial = listaPecas
         
         #Menus:
-        self.myQMenuBar = QMenuBar(self)
+        self.myQMenuBar = self.menuBar() #QMenuBar(self)
         menuOpcoes = self.myQMenuBar.addMenu('Opcoes')
-        
+
         #Menu gerar novo:
         acaoNovo = QAction('&Novo Jogo',self)
         acaoNovo.setShortcut('F2')
@@ -75,6 +76,28 @@ class Desenho(QWidget):
         if self.tema is not None:
             self.setImagemDasPecas(DialogoTema.dividirTema(self.tema, self.tamanho))
     
+
+        menuMetodoSolucionador = self.myQMenuBar.addMenu('Metodo Solucionador')
+        self.metodoEscolhido = 1        #Comeca com a A* com Heuristica 1
+
+        ag = QActionGroup(self, exclusive=True)
+        #Escolher metodo solucionador
+        metodo = QAction('Sem Heuristica (Busca em Largura)', self, checkable=True)     #Metodo 1
+        metodo.triggered.connect(lambda : self.acaoEscolherMetodo(1))
+        ag.addAction(metodo)
+        menuMetodoSolucionador.addAction(metodo)
+
+
+        metodo = QAction('A* com Heuristica 1', self, checkable=True, checked = True)   #Metodo 2
+        metodo.triggered.connect(lambda : self.acaoEscolherMetodo(2))
+        ag.addAction(metodo)
+        menuMetodoSolucionador.addAction(metodo)
+
+        metodo = QAction('A* com Heuristica 2', self, checkable=True)                   #Metodo 3
+        metodo.triggered.connect(lambda : self.acaoEscolherMetodo(3))
+        ag.addAction(metodo)
+        menuMetodoSolucionador.addAction(metodo)
+
         #Botao de resetar
         self.botaoReset = QPushButton('Resetar Jogo',self)
         self.botaoReset.setFixedSize(140,25)
@@ -82,7 +105,14 @@ class Desenho(QWidget):
         self.botaoReset.clicked.connect(self.acaoResetarJogo)
         self.botaoReset.setDefault(False)
         self.botaoReset.setAutoDefault(False) 
-        
+
+
+
+
+        #SubMenu Metodo Solucionador
+
+
+        '''
         #Escolha do algoritmo para resolver
         self.radioButtons = QButtonGroup()
         aEstrelaDistancia = QRadioButton('A* para distancia\nate o objetivo',self)
@@ -101,8 +131,12 @@ class Desenho(QWidget):
         aEstrelaDistancia.move(self.xRadio,self.yRadioInicial)
         aEstrelaPecasForaDoLugar.move(self.xRadio,self.yRadioInicial+passo)
         buscaLargura.move(self.xRadio,self.yRadioInicial+(2*passo))
-        
-    
+        '''
+
+    def acaoEscolherMetodo(self, metodo):
+        self.metodoEscolhido = metodo
+        print(metodo)
+
     #EVENTO PRINCIPAL DE PINTURA
     def paintEvent(self, event):
         
@@ -121,11 +155,7 @@ class Desenho(QWidget):
         paint.setPen(QColor(Qt.white))
         for peca in self.listaPecas:
             peca.drawPeca(paint)
-        
-        paint.setPen(QColor(Qt.black))
-        paint.setFont(QFont("Arial",14))        
-        paint.drawText(self.xRadio,5*self.borda,"Algoritmo de Resolucao:")
-        
+
         #Fechar pintor
         paint.end()
         
@@ -152,7 +182,7 @@ class Desenho(QWidget):
         pass
     def acaoSolucionar(self):
         s = Solucionador(self.getListaDePecas())
-        self.getListaMovimentos(s.solucionar())                
+        self.getListaMovimentos(s.solucionar(self.metodoEscolhido))
     def getListaDePecas(self):
         retorno = range(0,9)
         for peca in self.listaPecas:

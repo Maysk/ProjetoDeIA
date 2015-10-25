@@ -12,7 +12,7 @@ class Solucionador:
         self.estadosJaAvaliados = {}
 
     #Soluciona e retorna uma lista de chars onde cada char representa um movimento
-    def solucionar(self):
+    def solucionar(self, metodoEscolhido):
         no = None
         self.fronteira.adicionarNoNaFronteira(self.raiz)
         pecasNasPosicoesCorretas = False
