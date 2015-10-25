@@ -25,7 +25,7 @@ class Desenho(QMainWindow):
         self.corCerto = QColor(redCerto,greenCerto,blueCerto)
         self.tema = tema
         # setGeometry(x_pos, y_pos, width, height)    
-        self.setGeometry(100, 100, self.tamanho+(2*self.borda)+240, self.tamanho+(2*self.borda)+self.bordaMenu+self.bordaRodape)
+        self.setGeometry(100, 100, self.tamanho+(2*self.borda), self.tamanho+(2*self.borda)+self.bordaMenu+self.bordaRodape)
         self.setWindowTitle('Joguinho Weeeeeeeeee')
 
         #Guardando tabuleiro inicial:
@@ -97,40 +97,6 @@ class Desenho(QMainWindow):
         metodo.triggered.connect(lambda : self.acaoEscolherMetodo(3))
         ag.addAction(metodo)
         menuMetodoSolucionador.addAction(metodo)
-
-        '''
-        #Botao de resetar
-        self.botaoReset = QPushButton('Resetar Jogo',self)
-        self.botaoReset.setFixedSize(140,25)
-        self.botaoReset.move(self.borda+self.tamanho-140,(2*borda)+tamanho+15)
-        self.botaoReset.clicked.connect(self.acaoResetarJogo)
-        self.botaoReset.setDefault(False)
-        self.botaoReset.setAutoDefault(False) 
-
-
-        #SubMenu Metodo Solucionador
-        '''
-
-        '''
-        #Escolha do algoritmo para resolver
-        self.radioButtons = QButtonGroup()
-        aEstrelaDistancia = QRadioButton('A* para distancia\nate o objetivo',self)
-        aEstrelaPecasForaDoLugar = QRadioButton('A* para pecas\nfora do lugar',self)
-        buscaLargura = QRadioButton('Busca em Largura',self)
-        
-        aEstrelaDistancia.click() #set default
-        
-        self.radioButtons.addButton(aEstrelaDistancia)
-        self.radioButtons.addButton(aEstrelaPecasForaDoLugar)
-        self.radioButtons.addButton(buscaLargura)        
-                
-        self.xRadio = self.borda+self.tamanho+15 
-        passo = 35
-        self.yRadioInicial = 65
-        aEstrelaDistancia.move(self.xRadio,self.yRadioInicial)
-        aEstrelaPecasForaDoLugar.move(self.xRadio,self.yRadioInicial+passo)
-        buscaLargura.move(self.xRadio,self.yRadioInicial+(2*passo))
-        '''
 
     def acaoEscolherMetodo(self, metodo):
         self.metodoEscolhido = metodo
