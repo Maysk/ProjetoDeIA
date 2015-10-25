@@ -9,7 +9,7 @@ class No:
     def __init__(self, noPai, movimentoGerador, estadoTabuleiro):
         self.noPai = noPai
         self.movimentoGerador = movimentoGerador
-        self.estadoTabuleiro = EstadoTabuleiro(estadoTabuleiro)
+        self.estadoTabuleiro = estadoTabuleiro
         self.nosDescendentes = []
 
         if noPai is None:

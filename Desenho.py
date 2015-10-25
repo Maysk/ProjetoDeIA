@@ -78,7 +78,7 @@ class Desenho(QMainWindow):
     
 
         menuMetodoSolucionador = self.myQMenuBar.addMenu('Metodo Solucionador')
-        self.metodoEscolhido = 1        #Comeca com a A* com Heuristica 1
+        self.metodoEscolhido = 2        #Comeca com a A* com Heuristica 2
 
         ag = QActionGroup(self, exclusive=True)
         #Escolher metodo solucionador
@@ -98,6 +98,7 @@ class Desenho(QMainWindow):
         ag.addAction(metodo)
         menuMetodoSolucionador.addAction(metodo)
 
+        '''
         #Botao de resetar
         self.botaoReset = QPushButton('Resetar Jogo',self)
         self.botaoReset.setFixedSize(140,25)
@@ -107,10 +108,8 @@ class Desenho(QMainWindow):
         self.botaoReset.setAutoDefault(False) 
 
 
-
-
         #SubMenu Metodo Solucionador
-
+        '''
 
         '''
         #Escolha do algoritmo para resolver
@@ -180,9 +179,13 @@ class Desenho(QMainWindow):
         self.update()
         
         pass
+
+
     def acaoSolucionar(self):
-        s = Solucionador(self.getListaDePecas())
-        self.getListaMovimentos(s.solucionar(self.metodoEscolhido))
+        s = Solucionador(self.getListaDePecas(), self.metodoEscolhido)
+        self.getListaMovimentos(s.solucionar())
+
+
     def getListaDePecas(self):
         retorno = range(0,9)
         for peca in self.listaPecas:

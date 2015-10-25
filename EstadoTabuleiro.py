@@ -5,9 +5,10 @@ __author__ = 'Matheus'
 class EstadoTabuleiro:
     #Inicializador
     #listaRepresentandoTabuleiro: list
-    def __init__(self, listaRepresentandoTabuleiro):
+    def __init__(self, listaRepresentandoTabuleiro, funcaoHeuristica):
         self.listaRepresentandoTabuleiro = listaRepresentandoTabuleiro
-        self.valorHeuristico = self.funcaoHeuristicaDistanciaAteObjetivo()
+        self.valorHeuristico = funcaoHeuristica(listaRepresentandoTabuleiro)
+
 
     def isPecasNasPosicoesCorretas(self):
         pecasNasPosicoesCorretas = True
@@ -82,37 +83,8 @@ class EstadoTabuleiro:
                 print self.listaRepresentandoTabuleiro[i]
             else:
                 print self.listaRepresentandoTabuleiro[i],
-            
-
-    def funcaoHeuristicaParaBuscaEmLargura(self):
-        return 0
-
-    def funcaoHeuristicaParaPecasForaDoLugar(self):
-        totalDePecasForaDoLugar = 0
-        for i in range(len(self.listaRepresentandoTabuleiro)):
-            if(self.listaRepresentandoTabuleiro[i] != 0 ):
-                linhaAtual = i/3
-                colunaAtual = i%3
-                linhaCorreta = (self.listaRepresentandoTabuleiro[i]-1)/3
-                colunaCorreta = (self.listaRepresentandoTabuleiro[i]-1)%3
-                if(linhaAtual != linhaCorreta or colunaAtual !=colunaCorreta):
-                    totalDePecasForaDoLugar = totalDePecasForaDoLugar + 1
-
-        return totalDePecasForaDoLugar
 
 
-    #Funcao Heuristica original
-    def funcaoHeuristicaDistanciaAteObjetivo(self):
-        totalDeMovimentosLivresNecessarios = 0
-        for i in range(len(self.listaRepresentandoTabuleiro)):
-            if(self.listaRepresentandoTabuleiro[i] != 0 ):
-                linhaAtual = i/3
-                colunaAtual = i%3
-                linhaCorreta = (self.listaRepresentandoTabuleiro[i]-1)/3
-                colunaCorreta = (self.listaRepresentandoTabuleiro[i]-1)%3
-                totalDeMovimentosLivresNecessarios += abs(linhaAtual - linhaCorreta) + abs(colunaAtual - colunaCorreta)
-
-        return totalDeMovimentosLivresNecessarios
     
     @staticmethod
     def isSolucionavel(lista, mostrarNumInversoes = False):
